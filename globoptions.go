@@ -7,6 +7,7 @@ import (
 
 // glob is an internal type to store options during globbing.
 type glob struct {
+	caseInsensitive       bool
 	failOnIOErrors        bool
 	failOnPatternNotExist bool
 	filesOnly             bool
@@ -25,6 +26,16 @@ func newGlob(opts ...GlobOption) *glob {
 		opt(g)
 	}
 	return g
+}
+
+// WithCaseInsensitive is an option that can be passed to Glob, GlobWalk, or
+// FilepathGlob. If passed, doublestar will treat all alphabetic characters as
+// case insensitive (i.e. "a" in the pattern would match "a" or "A"). This is
+// useful for platforms like Windows where paths are case insensitive by default.
+func WithCaseInsensitive() GlobOption {
+	return func(g *glob) {
+		g.caseInsensitive = true
+	}
 }
 
 // WithFailOnIOErrors is an option that can be passed to Glob, GlobWalk, or
